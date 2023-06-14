@@ -17,7 +17,7 @@ A package to capture all displayed screens on the monitors
 final screenCatch = ScreenCapture();
 final path = await getApplicationDocumentsDirectory();
 String imageName = 'Screenshoot-${DateTime.now().millisecondsSinceEpoch}.jpg';
-String imagePath = '${path.path}/mauju-time-tracker/screencast/${imageName}';
+String imagePath = '${path.path}/screencast/${imageName}';
 if (Platform.isWindows) {
     screenCatch.captureForWindows(fileName: imagePath);
 } else if (Platform.isMacOS) {
@@ -26,7 +26,7 @@ if (Platform.isWindows) {
     listDisplay = await screenCatch.getDisplayIDsMac();
     for (var i = 0; i < listDisplay.length; i++) {
         imageName = 'Screenshoot-${DateTime.now().millisecondsSinceEpoch}${i}.jpg';
-        imagePath = '${path.path}/mauju-time-tracker/screencast/${imageName}';
+        imagePath = '${path.path}/screencast/${imageName}';
         screenCatch.captureForMacos(path: imagePath, displayId: (i + 1).toString());
     }
 }
