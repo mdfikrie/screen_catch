@@ -1,16 +1,40 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 import 'package:ffi/ffi.dart';
 import 'package:win32/win32.dart';
 
 class ScreenCatch {
-  void captureAllScreens({String? fileName}) {
-    if (Platform.isWindows) {
-      _captureForWindows(fileName: fileName);
-    } else if (Platform.isMacOS) {}
+  // void captureScreenWindows({String? fileName}) {
+  //   if (Platform.isWindows) {
+  //     _captureForWindows(fileName: fileName);
+  //   } else if (Platform.isMacOS) {}
+  // }
+
+  void captureForMacos({String? path, String? displayId}) async {
+    final process =
+        await Process.start("screencapture", ["-x", "-D", displayId!, path!]);
+    final exitCode = await process.exitCode;
+    if (exitCode == 0) {
+      print(path);
+    } else {
+      print("Screenshoot gagal dijalankan");
+    }
   }
 
-  void _captureForWindows({String? fileName}) {
+  Future<List<String>> getDisplayIDsMac() async {
+    var displayList = <String>[];
+    final process = await Process.start('ioreg', ['-l']);
+    final output = await process.stdout.transform(utf8.decoder).join();
+    var matches =
+        RegExp(r'"IODisplayEDID" = <([a-zA-Z0-9]+)').allMatches(output);
+    matches.forEach((element) {
+      displayList.add(element.group(1).toString());
+    });
+    return displayList;
+  }
+
+  void captureForWindows({String? fileName}) {
     final hDC = GetDC(NULL);
     final hMemoryDC = CreateCompatibleDC(hDC);
 
