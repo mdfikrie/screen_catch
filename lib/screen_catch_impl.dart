@@ -5,6 +5,12 @@ import 'package:win32/win32.dart';
 
 class ScreenCatch {
   void captureAllScreens({String? fileName}) {
+    if (Platform.isWindows) {
+      _captureForWindows(fileName: fileName);
+    } else if (Platform.isMacOS) {}
+  }
+
+  void _captureForWindows({String? fileName}) {
     final hDC = GetDC(NULL);
     final hMemoryDC = CreateCompatibleDC(hDC);
 
@@ -59,7 +65,7 @@ class ScreenCatch {
         bitmapFileHeaderSize + bitmapInfoHeaderSize, fileSize, imageBytes);
 
     // Write to a file
-    final file = File(fileName!);
+    final file = File("${fileName!}.jpg");
     file.writeAsBytesSync(fileHeaderPtr.toList());
 
     // Clean up
