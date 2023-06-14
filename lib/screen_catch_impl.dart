@@ -11,14 +11,14 @@ class ScreenCatch {
   //   } else if (Platform.isMacOS) {}
   // }
 
-  void captureForMacos({String? path, String? displayId}) async {
+  Future<String> captureForMacos({String? path, String? displayId}) async {
     final process =
         await Process.start("screencapture", ["-x", "-D", displayId!, path!]);
     final exitCode = await process.exitCode;
     if (exitCode == 0) {
-      print(path);
+      return path;
     } else {
-      print("Screenshoot gagal dijalankan");
+      return "Screenshoot gagal dijalankan";
     }
   }
 
@@ -34,7 +34,7 @@ class ScreenCatch {
     return displayList;
   }
 
-  void captureForWindows({String? fileName}) {
+  Future<String> captureForWindows({String? fileName}) async {
     final hDC = GetDC(NULL);
     final hMemoryDC = CreateCompatibleDC(hDC);
 
@@ -89,7 +89,7 @@ class ScreenCatch {
         bitmapFileHeaderSize + bitmapInfoHeaderSize, fileSize, imageBytes);
 
     // Write to a file
-    final file = File("${fileName!}.jpg");
+    final file = File(fileName!);
     file.writeAsBytesSync(fileHeaderPtr.toList());
 
     // Clean up
@@ -100,5 +100,6 @@ class ScreenCatch {
     calloc.free(imagePtr);
     calloc.free(fileHeader);
     calloc.free(bitmapInfo);
+    return fileName;
   }
 }
