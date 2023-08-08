@@ -8,7 +8,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  win32: ^2.2.5
+  win32: 3.0.0
   ffi: 
   flutter:
     sdk: flutter
